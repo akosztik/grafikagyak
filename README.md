@@ -1,0 +1,2 @@
+# grafikagyak
+ELTE IK processing
