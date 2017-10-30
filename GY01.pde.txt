@@ -1,0 +1,129 @@
+float radius = 20;
+float ball_radius = 10;
+PVector ball_position;
+PVector velocity;
+float speed = 200.0;
+float delta_time;
+float last_time;
+
+void setup()
+{
+   size(600, 600); 
+   
+   ball_position = new PVector(width / 2, height / 2);
+   
+   velocity = PVector.random2D();
+   last_time = millis();
+   delta_time = 0;
+}
+
+void draw()
+{
+  update();
+  
+  background(100,100,180);
+  line(0, 0, mouseX, mouseY);
+  
+  ellipse(mouseX, mouseY, 2 * radius, 2 * radius);
+  
+  ellipse(ball_position.x, ball_position.y, 2 * ball_radius, 2 * ball_radius);
+}
+
+void update()
+{
+  delta_time = (millis() - last_time) / 1000.0;
+  last_time = millis();
+  radius = 30 + 20 * sin(millis() / 100.0);
+  
+  ball_position.add(velocity.get().mult(delta_time * speed));
+  
+  if (ball_position.x - ball_radius <= 0)
+  {
+    ball_position.x = ball_radius;
+    velocity.x = -1 * velocity.x;
+  } else if (ball_position.x + ball_radius >= width)
+  {
+    ball_position.x = width - ball_radius;
+    velocity.x = -1 * velocity.x;
+  }
+  
+  if (ball_position.y - ball_radius <= 0)
+  {
+    ball_position.y = ball_radius;
+    velocity.y = -1 * velocity.y;
+  } else if (ball_position.y + ball_radius >= height)
+  {
+    ball_position.y = height - ball_radius;
+    velocity.y = -1 * velocity.y;
+  }
+  
+  PVector diff = ball_position.get();
+  diff.sub(new PVector(mouseX, mouseY));
+  
+  if (diff.mag() < radius + ball_radius)
+  {
+    diff.normalize();
+    velocity = diff.get();
+    
+    PVector int_pt1 = new PVector(), int_pt2 = new PVector();    
+    int int_type = 0;
+    PVector pos1 = new PVector(0, 0);
+    PVector pos2 = ball_position.get().sub(new PVector(mouseX, mouseY));
+    IntersectionPoint(pos1, pos2, radius, int_pt1, int_pt2, int_type);
+    
+    if (int_type == 0)
+    {
+      int_pt1.add(new PVector(mouseX, mouseY));
+      int_pt2.add(new PVector(mouseX, mouseY));
+      
+      PVector diff1 = int_pt1.get().sub(ball_position);
+      PVector diff2 = int_pt2.get().sub(ball_position);
+      
+      diff = ball_position.get();
+      diff.sub(new PVector(mouseX, mouseY)).mult(0.5);
+      
+      if (diff1.mag() < diff2.mag())
+      {
+        ball_position = int_pt1.add(diff);
+      } else 
+      {
+        ball_position = int_pt2.add(diff);
+      }
+      
+      System.out.println(int_pt1);
+      System.out.println(int_pt2);
+    }  
+  }
+}
+
+void IntersectionPoint(PVector pt1, PVector pt2, float r, PVector out_pt1, PVector out_pt2, int int_type)
+{
+  float dx = pt2.x - pt1.x;
+  float dy = pt2.y - pt1.y;
+  float dr = sqrt(dx*dx + dy*dy);
+  float D = pt1.x * pt2.y - pt2.x * pt1.y;
+  
+  float disc = r*r * dr * dr - D * D;
+  
+  if (disc <= 1e-5)
+  {
+    int_type = 0;
+    return;
+  } 
+  
+  float x1 = (D * dy + sgn(dy) * dx * sqrt(disc)) / (dr * dr);
+  float x2 = (D * dy - sgn(dy) * dx * sqrt(disc)) / (dr * dr);
+  
+  float y1 = (-D * dx + abs(dy) * sqrt(disc)) / (dr * dr);
+  float y2 = (-D * dx - abs(dy) * sqrt(disc)) / (dr * dr);
+  
+  out_pt1.x = x1;
+  out_pt1.y = y1;
+  out_pt2.x = x2;
+  out_pt2.y = y2;
+}
+
+int sgn(float number)
+{
+  return number < 0 ? -1 : 1;
+}
