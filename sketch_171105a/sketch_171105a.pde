@@ -110,7 +110,8 @@ if(mousePressed==false){
 
 void mousePressed()
 {
-  press = new PVector(mouseX, mouseY);
+  //press = new PVector(mouseX, mouseY);
+  press= new PVector(slingMid, leftRodTopY);
   winner = false;
 }
 

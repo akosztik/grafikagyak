@@ -18,7 +18,7 @@ float groundspeed;
 Slingshot player1;
 Slingshot player2;
 int slingdistx=200;
-int slingdisty=300;
+int slingdisty=400;
 int slingwidth=16;
 CatmulRomSpline string1;
 CatmulRomSpline string2;
@@ -35,9 +35,7 @@ int shotholder=6;
 int green=0;
 int blue=0;
 Circle shot;
-Arrow arrow;
-Worm worm;
-
+Circle bullet;
 
 
 /********* SETUP BLOCK *********/
@@ -53,8 +51,8 @@ void setup() {
   string1 = new CatmulRomSpline(new PVector(player1.shotHolderMidle.x-60,player1.shotHolderMidle.y),player1.shotHolderMidle,new PVector(player1.shotHolderMidle.x+60,player1.shotHolderMidle.y));
   string2 = new CatmulRomSpline(new PVector(player2.shotHolderMidle.x-60,player2.shotHolderMidle.y),player2.shotHolderMidle,new PVector(player2.shotHolderMidle.x+60,player2.shotHolderMidle.y));
   actualplayer = "blue";
-  worm= new Worm(new PVector(0,0), 6);
-
+  shot= new Circle(release, 20);
+  bullet= new Circle(release, 20);
 }
 
 
@@ -88,21 +86,20 @@ void gameScreen() {
   if(mousePressed){
 
       background(64, 160, 255);//http://www.szintan.hu/lista/e/e06.htm
-      ground = loadImage("ground.png");
       movingBackground();
 
       //ellipse(mouseX,mouseY,40,40);
       if (actualplayer == "blue"){
         string1.setControllPoint(new PVector(mouseX, mouseY));
-        arrow=new Arrow(mouseX,mouseY,player1.shotHolderMidle);
+        fill(172, 199, 255);
       }
       if (actualplayer == "green"){
         string2.setControllPoint(new PVector(mouseX, mouseY));
-        arrow=new Arrow(mouseX,mouseY,player2.shotHolderMidle);
+        fill(188, 191, 64);
       }
-      worm= new Worm(new PVector(mouseX, mouseY),6);
-      worm.Draw();
-      arrow.Draw();
+ 
+      shot.setPosition(new PVector(mouseX,mouseY));
+      shot.Draw();
       stroke(255,0,0);
       string1.Draw();
       string2.Draw();
@@ -133,8 +130,10 @@ if(mousePressed==false){
  
  if(hasBeenReleased){   
     if(actualplayer == "blue" ){
-       worm= new Worm(new PVector(0,0), 6);
-       worm.Draw(release.x, release.y);
+        fill(172, 199, 255);
+        bullet.setPosition(release);
+        bullet.Draw();
+        //ellipse(release.x, release.y, 40, 40);
         release.add(press);
         release.y+=gravity;
         gravity+=0.8;
@@ -144,8 +143,10 @@ if(mousePressed==false){
 
    }
    if(actualplayer == "green"  ){
-       worm= new Worm(new PVector(0,0), 6);
-       worm.Draw(release.x, release.y);
+         fill(188, 191, 64);
+         bullet.setPosition(release);
+         bullet.Draw();
+         //ellipse(release.x, release.y, 40, 40);
          release.add(press);
          release.y+=gravity;
          gravity+=0.6;
@@ -156,16 +157,13 @@ if(mousePressed==false){
    if (exitscreen(release.x, release.y)){
      hasBeenReleased=false;
      shotholder--;
-    
+     println("x: "+release.x+" , y: "+release.y);
        if (actualplayer == "green"){
            actualplayer="blue";
        }else{
            actualplayer="green";
        }
    }
- }
- if (groundtouched(worm.x,worm.y)) {
-   ground = loadImage("groundShot.png");
  }
 if(shotholder==0){
     background(0);
@@ -191,25 +189,25 @@ void gameOverScreen() {
 
 
 void keyPressed(){
-  if (keyCode == UP && gameScreen==0) {
+  if (gameScreen==0 && keyCode == UP) {
     startGame();
   }
   if (gameScreen==1 && keyCode == RIGHT) {
     xmon += 10;  
-   
+    //println("----------"+xmon);
     //groundspeed= 10*ground.width/mountains.width;
     groundspeed= 10*(ground.width-width)/(mountains.width-width);
-  
+    //println(groundspeed);
     xground += groundspeed;
-  
+    //println("+++++++"+xground);
   
   } else if(gameScreen==1 && keyCode == LEFT) {
     xmon -= 10; 
-
+    //println("----------"+xmon);
     //groundspeed= 10*ground.width/mountains.width;
     groundspeed= 10*(ground.width-width)/(mountains.width-width);
     xground -= groundspeed;
-  
+    //println("+++++++"+xground);
   }
 }
 
@@ -235,7 +233,7 @@ public void mousePressed() {
      if (actualplayer=="blue"){
        press = new PVector(player1.shotHolderMidle.x,player1.shotHolderMidle.y);
     }else{
-        press = new PVector(player2.shotHolderMidle.x,player2.shotHolderMidle.y);
+       press = new PVector(player2.shotHolderMidle.x,player2.shotHolderMidle.y);
     }
   }
 
@@ -244,9 +242,9 @@ void mouseReleased(){
   if (gameScreen==1){
   float cSquared;
   if (actualplayer=="blue"){
-    cSquared = sqrt(((mouseY-player1.rodHolderleft.endpos.y)*(mouseY-player1.rodHolderleft.endpos.y))+((player1.shotHolderMidle.x-mouseX)*(player1.shotHolderMidle.x-mouseX)))/8;
+    cSquared = sqrt(((mouseY-player1.rodHolderleft.endpos.y)*(mouseY-player1.rodHolderleft.endpos.y))+((player1.shotHolderMidle.x-mouseX)*(player1.shotHolderMidle.x-mouseX)))/10;
   }else{
-    cSquared = sqrt(((mouseY-player2.rodHolderleft.endpos.y)*(mouseY-player2.rodHolderleft.endpos.y))+((player2.shotHolderMidle.x-mouseX)*(player2.shotHolderMidle.x-mouseX)))/8;
+    cSquared = sqrt(((mouseY-player2.rodHolderleft.endpos.y)*(mouseY-player2.rodHolderleft.endpos.y))+((player2.shotHolderMidle.x-mouseX)*(player2.shotHolderMidle.x-mouseX)))/10;
   }
   release = new PVector(mouseX, mouseY);
   press.sub(release);
@@ -261,15 +259,7 @@ boolean exitscreen(float x, float y){
   boolean b= false;
   if (x<0 || x>width || y<0 || y>height){
     b=true;
-  
-  }
-  return b; 
-}
-boolean groundtouched(float x, float y){
-  boolean b= false;
-  if (x>0 && x<ground.width && y>height-ground.height && y<height && hasBeenReleased ){
-    b=true;
-  
+    println("-----------------"+x+" , " +y);
   }
   return b; 
 }
