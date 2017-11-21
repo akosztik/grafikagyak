@@ -56,4 +56,97 @@ Hatékony pálya-megjelenítéshez és módosításhoz (lövedék-becsapódások
 
 Ponthatárok: 0-39%: 1; 40-54%: 2; 55-69%: 3; 70-84%: 4; 85-100+%: 5
 
+----------------------------------------------------------------------------------------------------
+3D Grafika Beadandó Feladatok
+
+1.) 3D Snooker!
+
+A háttér legyen babakék, szerepeljen benne perspektív kamera és tartalmazza az alább felsorolt objektumokat. (5%) 3D alakzatok, amelyeket le kell gyártani a programban: (Legyen méretarányos minden egymáshoz képest!)
+Snooker asztal: 4 láb (henger), asztallap (zöld téglatest), szegélyek (barna téglatest) (10%)
+Textúraként jelenjenek meg a lyukak az asztallapon. (2%)
+Snooker golyók: színes gömbök. (4%)
+Dákó: keskenyedő henger, lezárt végekkel. (4%)
+Funkciók:
+Indulás: A fehér golyó legyen a kezdővonalon, a többi golyók (nem kell pontosan lemásolni a játékot!) pedig háromszög alakban a szokásos helyen. (5%)
+Célzás: A fehér golyó pozíciója legyen egy koordinátarendszer középpontja, ami körül lehet forgatni a dákót (Balra és Jobbra billentyűk). A dákó és a fehér golyó távolsága legyen változtatható: minél nagyobb a távolság, később annál nagyobb sebességgel indul a golyó. (10%)
+Fehér labda indítása: A dákó animáltan mozogjon indításkor. (5%) Miután elért a fehérhez, tűnjön el, a labda pedig induljon el a meghatározott irányba. (5%)
+Ütközés golyók között: Két golyó ütközésénél elegendő körök ütközését figyelembe venni. Valamilyen módon pattanjanak le egymásról és folyásolják be egymás sebességét. Mindkettő veszítse sebessége 2%-át ütközéskor. (10%) 
+Ütközés a szegélyek és a golyók között: A szegéllyel való ütközésnél, csak pattanjon le a mozgó golyó a falról, veszítve 3%-ot a sebességéből.  (5%)
+EXTRA: A fizikai törvényekhez hű ütközés-megvalósítás esetén: +15%.
+Golyók mozgása: Legyen egy sebesség-arányos csillapítás (surlódás az asztallal), ami lassítja a golyót. (5%)
+Ha a játékos 10 másodpercig nem csinál semmit (nem mozgatja a dákót, se semmilyen interakciót nem végez), akkor automatikusan történjen meg az ütes a dákó aktuális pozíciójától függően. (10%) A visszaszámláló a GUI-n legyen megjelenítve (5%)  
+Kameramozgás:
+Amíg van golyó-mozgás az asztalon, egy CatmullRom splineon keringjen a kamera az asztal körül, a leggyorsabban mozgó golyót nézve. (10%)
+Célzáskor a kamera First Person nézetben legyen a dákó és a játékos. (a kamera hozzá legyen fixálva). (5%)
+
+Ponthatárok: 0-39%: 1; 40-54%: 2; 55-69%: 3; 70-84%: 4; 85-100+%: 5
+
+
+2.) 3D Aszteroidák!
+
+Forrás: http://en.wikipedia.org/wiki/Asteroids_%28video_game%29
+
+Az alkalmazás indításakor jelenjen meg egy fekete háttér, a közepén egy űrhajóval és két aszteroidával! (5%) A feladatok csak akkor fogadhatóak el, ha az alakzatok 3D-sek.
+Az alkalmazás működése közben legyenek láthatóak lövedékek (hengerek), aszteroidák (módosított, torzított gömbök) és egy űrhajó (tetraéder test és egyéb tetszőleges díszítés, https://hu.wikipedia.org/wiki/Tetra%C3%A9der). (5%) A különböző alakzatok eltérő színek segítségével legyenek kirajzolva (kitöltés ill. körvonalak)! (5%)
+Megjegyzés: Ha körvonalakat használsz, valamennyire idézze az eredeti “retro” stílust!
+
+(retro style)
+
+Az játéktér az XZ síkon fekszik, tehát mind az aszteroidák, mind az űrhajó az XZ síkon mozog. Az űrhajót lehessen forgatni a jobbra, balra, fel és le billentyűk segítségével a megfelelő irányokba. (5%) Az űrhajó legyen képes előre haladni a jobb egérgomb segítségével. (5%) A szóköz billentyű lenyomására az űrhajó orrából szálljanak lövedékek nagyjából abba az irányba, amerre néz! (5%) Ha többet repültek már, mint 300 egység, semmisítse meg a lövedékeket a program. (5%) Az űrhajó oldalainak háromszögei közül legalább kettőt lásson mindig a kamera. A kamera kövesse az űrhajót mindig azonos távolságból! (5%) Különben, ha azt dinamikusan követi (nem statikus módon rögzített a kamera a térben az űrhajóhoz képest): +5%.
+
+	Az aszteroidák alapja egy-egy gömbfelületről random mintavételezett (normális irányokban eltolt) torzított gömbfelület. Azaz, ha a gömb középpontjától 1 egységre volt egy pont, azt random el lehet tolni az alakzat generálásakor. (5%) Minden aszteroida különböző legyen és random sebességgel forogjanak a különböző irányokban! (5%) Az aszteroidák 3 méretben létezzenek, rendre 7, 6 és 5 “detailedness” felbontásban! (5%) A legnagyobb aszteroida 10 egység sugarú legyen, a kisebbek 7 illetve 4 egység. (5%)
+
+A lövedékek különböző aszteroidákkal érintkezve semmisüljenek meg és a következőket váltsák ki:
+Nagy aszteroida: essen 3 közepes aszteroidára, induljanak különböző irányokba! (5%)
+Közepes aszteroida: essen 2 kicsi aszteroidára, repüljenek különböző irányokba! (5%)
+Kicsi aszteroida: semmisüljön meg! (5%)
+Az ütközést gömb (aszteroidát befoglaló gömb) és gömb (a hengert befoglaló gömb) érintkezésvizsgálatával oldd meg! (5%) Ha az asztoroidák távolabb repülnek mint 300 egység: semmisüljenek meg, és generálódjanak újak az űrhajó háta mögött, nem látható területen, a közelben. (5%)
+
+	Tömegvonzás és fizikai szimuláció. Az űrhajó és az aszteroidák rendelkezzenek tömeggel. Ha egy aszteroida kisebb darabokra esik, a kezdeti tömeg osztódjon szét a darabok között! (5%) Az aszteroidák vonzzák egymást a tömegükkel arányosan minden iterációban! (5%) Az aszteroidák az űrhajóra is gyakoroljanak gravitációs erőhatást minden iterációban! (5%)
+
++10%: Legyenek egymást követő pályák, ahol egyre nagyobbak a tömegek, így egyre erősebb a gravitáció! Legyen pontszámláló is!
++5%: Legyen csillagokkal teli háttér, ami körülveszi a szemlélőt és az űrhajót!
+
+
+Ponthatárok: 0-39%: 1; 40-54%: 2; 55-69%: 3; 70-84%: 4; 85-100+%: 5
+
+
+megjegyzés: Hogy mindezt kényelemsen lehessen megvalósítani, minden tárgynak kell rendelkeznie valamilyen sebességgel (“Velocity”), pozícióval (“Position”) és gyorsulással (“Acceleration”). Minden megjelenítés (draw) előtt az előző megjelenítés óta eltelt idővel arányosan érdemes frissíteni (vagy úgym. integrálni) a pozíciót:
+Position += Velocity * delta_time;
+
+
+Hogy a különböző erőhatásokat is lehessen szimulálni testek között, érdemes előbb hasonlóan a “Accelerationt”-t is frissíteni. Minden iterációs lépés legelején összegezni kell az egy testre ható erőket (“Force”) és gyorsulásba (“Acceleration”) konvertálni őket (“erő alkalmazása”):
+Acceleration = Force / Mass;
+
+
+… majd magát a “Velocity”-t is integrálni idő szerint, mielőtt a “Position”-t frissítenénk azzal, tehát:
+Velocity += Acceleration * delta_time;
+
+
+Egy testre ható gravitációs erőt a következőképpen lehet kiszámolni:
+nagyság(Force) = G * tömeg1*tömeg2 / Távolsaguk^2;
+(A G egy konstans. Ezt növelve, vagy csökkentve befolyásolható az erőhatások erőssége!)
+
+(A képletek csak segítségek, butított verzióik is elfogadhatóak!)
+
+Sematikusan a draw() függvény belsejének egy része (ezt még lehet egyszerűsíteni is):
+delta_time = …
+background(0,0,0);
+for each body A
+A.Acceleration.x = 0;
+A.Acceleration.y = 0;
+A.Acceleration.z = 0;
+for each body B
+if(A == B) continue;
+Force = ERŐ(A és B között, A-ból B-be mutató 2D vektor);
+A.Acceleration += Force / A.mass;
+A.Velocity += A.Acceleration * delta_time;
+A.Position += A.Velocity * delta_time;
+A.draw();
+
+
+Ponthatárok: 0-39%: 1; 40-54%: 2; 55-69%: 3; 70-84%: 4; 85-100+%: 5
+
+
+
 
