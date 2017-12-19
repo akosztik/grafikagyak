@@ -148,5 +148,15 @@ A.draw();
 Ponthatárok: 0-39%: 1; 40-54%: 2; 55-69%: 3; 70-84%: 4; 85-100+%: 5
 
 
+-------------------------------------------------
+https://www.openprocessing.org/sketch/2070
+https://www.openprocessing.org/sketch/21754
+https://www.openprocessing.org/sketch/16912
+https://github.com/andreasburmeister/SpaceTime/tree/master/src/spaceTime
+https://github.com/giancarlofleuri/GalaxyDefender
+https://www.openprocessing.org/sketch/106239
+http://vision.sztaki.hu/~danini/Grafika_Esti/2017-2018-1/GY12/
+https://www.reddit.com/r/processing/comments/65v4yn/pwc58_asteroids/
+https://www.tischler-center.at/topics/asteroids
 
 
