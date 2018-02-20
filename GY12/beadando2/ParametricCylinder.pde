@@ -1,16 +1,35 @@
-abstract class ParametricSurface
+class ParametricCylinder 
 {
+  float height = 10;
+  float radius = 5;
   int detailness_u = 20;
   int detailness_v = 20;
   
-  PImage tex;
-  PVector tex_offset = new PVector();
+  PVector GetPosition(float u, float v)
+  {
+    u *= 2 * PI;
+    return new PVector(radius * cos(u),
+      v * height,
+      radius * sin(u));
+  }
   
-  abstract PVector GetPosition(float u, float v);
-  abstract PVector GetNormal(float u, float v);
-  abstract PVector GetDiffU(float u, float v);
-  abstract PVector GetDiffV(float u, float v);
+  PVector GetNormal(float u, float v)
+  {
+    PVector n = GetPosition(u, v);
+    n.y = 0;
+    n.normalize();
+    return n;
+  }
   
+  PVector GetDiffU(float u, float v)
+  {
+    return new PVector();
+  }
+  
+  PVector GetDiffV(float u, float v)
+  {
+    return new PVector();
+  }
   void Draw()
   {
     float step_u = 1.0 / detailness_u;
@@ -18,9 +37,6 @@ abstract class ParametricSurface
     
     noStroke();
     beginShape(TRIANGLES);
-      textureMode(NORMAL);
-      textureWrap(REPEAT);
-      texture(tex);
     
       for (int i = 0; i < detailness_v; ++i)
       {
@@ -35,23 +51,24 @@ abstract class ParametricSurface
           PVector p2 = GetPosition(u2, v1);
           PVector p3 = GetPosition(u1, v2);
           PVector p4 = GetPosition(u2, v2);
+          
           PVector n1 = GetNormal(u1, v1);
           PVector n2 = GetNormal(u2, v1);
           PVector n3 = GetNormal(u1, v2);
           PVector n4 = GetNormal(u2, v2);
-                    
-          vertex(p1.x, p1.y, p1.z, u1 + tex_offset.x, v1 + tex_offset.y);
+          
+          vertex(p1.x, p1.y, p1.z);
           normal(n1.x, n1.y, n1.z);          
-          vertex(p2.x, p2.y, p2.z, u2 + tex_offset.x, v1 + tex_offset.y);
+          vertex(p2.x, p2.y, p2.z);
           normal(n2.x, n2.y, n2.z);
-          vertex(p3.x, p3.y, p3.z, u1 + tex_offset.x, v2 + tex_offset.y);
+          vertex(p3.x, p3.y, p3.z);
           normal(n3.x, n3.y, n3.z);
           
-          vertex(p2.x, p2.y, p2.z, u2 + tex_offset.x, v1 + tex_offset.y);
+          vertex(p2.x, p2.y, p2.z);
           normal(n2.x, n2.y, n2.z);
-          vertex(p4.x, p4.y, p4.z, u2 + tex_offset.x, v2 + tex_offset.y);
+          vertex(p4.x, p4.y, p4.z);
           normal(n4.x, n4.y, n4.z);
-          vertex(p3.x, p3.y, p3.z, u1 + tex_offset.x, v2 + tex_offset.y);
+          vertex(p3.x, p3.y, p3.z);
           normal(n3.x, n3.y, n3.z);
         }
       }

@@ -2,9 +2,8 @@ class SpaceShip
 {
   PVector position = new PVector();
   PVector rotation = new PVector();
-  float scale_factor = 5;
+  float scale_factor = 0.05;
   Boolean is_move_forward = false;
-  Boolean is_move_backward = false;
   Boolean is_turn_left = false, is_turn_right = false, is_turn_up = false, is_turn_down = false;
   int last_time;
   
@@ -46,12 +45,12 @@ class SpaceShip
       rotation.y += angular_speed * delta_time;
       
     // Move
-    if (is_move_backward)
+    /*if (is_move_backward)
       speed = max(-max_speed, speed - acc * delta_time);
-    
+    */
     if (is_move_forward)
       speed = min(max_speed, speed + acc * delta_time);
-      
+      /*
     if (!is_move_backward && !is_move_forward)
     {
       int sgn = speed < 0 ? -1 : 1;
@@ -59,7 +58,7 @@ class SpaceShip
       if (abs(speed) < 0.5 * delta_time * acc)
         speed = 0;
     }
-      
+      */
     if (abs(speed) > 0)
     {
       PVector f = GetForward();
@@ -81,14 +80,12 @@ class SpaceShip
   
   void Draw()
   {
-    noStroke();
-    fill(243, 3, 7);
     pushMatrix();
+      fill(255, 0, 0);
       translate(position.x, position.y, position.z);
       rotateX(rotation.x);
       rotateY(rotation.y);
       rotateZ(rotation.z);
-      scale(scale_factor);
       beginShape(TRIANGLES);
         rotateX(PI/6);
         rotateY(PI/6);
@@ -127,8 +124,17 @@ class SpaceShip
     is_move_forward = on;
   }
   
-  void MoveBackward(Boolean on)
+  /*void MoveBackward(Boolean on)
   {
     is_move_backward = on;
+  }*/
+    void TurnUp(Boolean on)
+  {
+    is_turn_up = on;
+  }
+  
+  void TurnDown(Boolean on)
+  {
+    is_turn_down = on;
   }
 }

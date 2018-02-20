@@ -1,20 +1,20 @@
+import java.util.Iterator;
 // kamera
 Camera camera;
-ParametricSphere par_sphere = new ParametricSphere();
 
-PShape space_ship_body;
 SpaceShip space_ship;
-CatmulRomSpline spline;
 PVector pos;
 
 ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
 ArrayList<Asteroid> asteroids= new ArrayList<Asteroid>();
+ArrayList<ParametricSphere> asteroid= new ArrayList<ParametricSphere>();
 
 
 int camera_mode = 1; // 1 -- Free fly, 2 -- spline
 int idx = 0;
 float t = 0;
 int last_time;
+int mouseEventValue = 0;
 float radiusL=10.0;
 float radiusM=7.0;
 float radiusS=4.0;
@@ -25,22 +25,19 @@ void setup()
   camera = new Camera();
   last_time = millis();
   pos = new PVector(0,0,0);
-  space_ship_body = loadShape("space_frigate.obj");
-  space_ship = new SpaceShip(space_ship_body);
+  space_ship = new SpaceShip();
   space_ship.position = pos;
   space_ship.position.y += 2;
-  spline = new CatmulRomSpline();
-  spline.AddPoint(PVector.add(pos, new PVector(-3, 3, -3)));
-  spline.AddPoint(PVector.add(pos, new PVector(3, 2, -3)));
-  spline.AddPoint(PVector.add(pos, new PVector(3, 1.2, 3)));
-  spline.AddPoint(PVector.add(pos, new PVector(-3, 2, 3)));
-  spline.AddPoint(PVector.add(pos, new PVector(-3, 3, -3)));
-  spline.AddPoint(PVector.add(pos, new PVector(3, 2, -3)));
-  spline.AddPoint(PVector.add(pos, new PVector(3, 0.2, 3)));
+  int[] randomTenyezo = new int[10];
+  for( int i = 0; i < randomTenyezo.length; i++ )
+  {
+    randomTenyezo[i] = (int)(Math.random()*10)+1;
+  }
   
-  asteroids.add(new Asteroid(radiusL,random(5,45)/100.0,random(5,60)/500.0,(int)random(5,7)));
-  asteroids.add(new Asteroid(radiusL,random(5,45)/100.0,random(5,60)/500.0,(int)random(5,7)));
-  
+  //asteroids.add(new Asteroid(radiusL,random(5,45)/100.0,random(5,60)/500.0,(int)random(5,7)));
+  //asteroids.add(new Asteroid(radiusL,random(5,45)/100.0,random(5,60)/500.0,(int)random(5,7)));
+  asteroid.add(new ParametricSphere((int)radiusL,(int)random(5,7),randomTenyezo[0]));
+  asteroid.add(new ParametricSphere((int)radiusL,(int)random(5,7),randomTenyezo[1]));
 }
 
 void update()
@@ -48,27 +45,30 @@ void update()
   float  delta_time = (millis() - last_time) / 1000.0;
   last_time = millis();
     
-  if (camera_mode == 1)   
-    camera.update(); 
-  else if (camera_mode == 2)
-  {
-    t += 0.4 * delta_time;
-    if (t >= 1.0)
-    {
-      t = 0;
-      ++idx;
-      if (idx >= spline.controllPoints.size() - 3)
-        idx = 0; 
-    }
-    
-    camera.eye = spline.eval(t, idx);
-    camera.lookAt = space_ship.position;
+   if (camera_mode == 1) {   
+    camera.resetCamera();
+    last_time = millis();
+    camera_mode = 5;
+  } else if (camera_mode == 2) {
+    camera.eye = new PVector(space_ship.position.x+70,space_ship.position.y+70,space_ship.position.z+70);
+    camera.lookAt = new PVector(space_ship.position.x,space_ship.position.y,space_ship.position.z);
+    camera.applyCamera();
+  } else if (camera_mode == 3) {
+    camera.eye = new PVector(20,20,space_ship.position.z+20);
+    camera.lookAt = new PVector(space_ship.position.x,space_ship.position.y,space_ship.position.z);
     camera.applyCamera();
   }
   
   space_ship.Update();
   for (Projectile p : projectiles)
     p.Update();
+  Iterator<Projectile> it = projectiles.iterator();
+  while (it.hasNext()) {
+    Projectile p = it.next();
+    if(dist(p.start.x, p.start.y, p.start.z, p.position.x, p.position.y, p.position.z) >= 300){
+        it.remove();
+    }
+  }
 }
 
 void draw()
@@ -108,16 +108,16 @@ void keyPressed()
         space_ship.Fire(projectiles);
         break;
       case 'w':
-        camera.MoveForward(true);
+        camera.MoveForward();
         break;
       case 'a':
-        camera.MoveLeft(true);
+        camera.MoveLeft();
         break;
       case 's':
-        camera.MoveBackward(true);
+        camera.MoveBackward();
         break;
       case 'd':
-        camera.MoveRight(true);
+        camera.MoveRight();
         break;
       case '1':
         camera_mode = 1;
@@ -125,6 +125,9 @@ void keyPressed()
       case '2':
         camera_mode = 2;
         break;
+      case '3':
+        camera_mode = 3;
+      break;
     }
   }
 }
@@ -153,25 +156,40 @@ void keyReleased()
     switch (key)
     {
       case 'w':
-        camera.MoveForward(false);
+        camera.MoveForward();
         break;
       case 'a':
-        camera.MoveLeft(false);
+        camera.MoveLeft();
         break;
       case 's':
-        camera.MoveBackward(false);
+        camera.MoveBackward();
         break;
       case 'd':
-        camera.MoveRight(false);
+        camera.MoveRight();
         break;
     }
   }
 }
+void mousePressed() {
+  if (mouseEventValue == 0 && (mouseButton == RIGHT)) {
+     space_ship.MoveForward(true);
+      mouseEventValue = 255;
+  } else {
+    mouseEventValue = 0;
+  }
+}
 
+void mouseReleased() {
+  if (mouseEventValue == 255) {
+     space_ship.MoveForward(false);
+     mouseEventValue = 0;
+  } else {
+    mouseEventValue = 0;
+  }
+}
 void setLight()
 {
   lights();
-  directionalLight(51, 102, 126, -1, -1, 0);
   ambient(255, 255, 255);
 }
 
@@ -182,11 +200,18 @@ void draw3D()
   for (Projectile p : projectiles)
     p.Draw();
     
-  translate(40,10,0);
-  asteroids.get(1).draw();
-  translate(-20,20,0);
-  asteroids.get(0).draw();
   
+    translate(-20,20,0);
+    //asteroids.get(0).draw();
+    asteroid.get(0).Draw();
+    translate(20,10,0);
+    asteroid.get(1).Draw();
+  
+ /* pushMatrix();
+    translate(20,10,0);
+    //asteroids.get(1).draw();
+    asteroid.get(1).Draw();
+  popMatrix();*/
   
   
 } // end draw3D()

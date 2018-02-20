@@ -13,88 +13,103 @@ class Camera
   
   int last_time;
   
-  Camera()
-  {
+  Camera() {
     applyCamera();
     last_time = millis();
   }
   
   void setLookAt(PVector newLookAt)
   {
-    lookAt = newLookAt.get();
+    lookAt = newLookAt;
     lookAt.sub(eye);
     lookAt.normalize();
     lookAt.add(eye);
   }
   
-  void MoveLeft(Boolean on)
-  {
-    is_move_left = on;
+  void MoveLeft() {
+    seteye(0,10,0);
+    applyCamera();
+    System.out.print("+Y");
   }
   
-  void MoveRight(Boolean on)
-  {
-    is_move_right = on;
+  void MoveRight() {
+    seteye(0,-10,0);
+    applyCamera();
+    System.out.print("-Y");
   }
   
-  void MoveForward(Boolean on)
-  {
-    is_move_forward = on;
+  void MoveForward() {
+    seteye(-10,0,0);
+    applyCamera();
+    System.out.print("-x");
   }
   
-  void MoveBackward(Boolean on)
-  {
-    is_move_backward = on;
+  void MoveBackward() {
+    seteye(10,0,0);
+    System.out.print("+x");
+    applyCamera();
   }
   
-  void MoveUp(Boolean on)
-  {
-    is_move_up = on;
+  void MoveUp() {
+    seteye(0,0,10);
+    System.out.print("+Z");
+    applyCamera();
   }
   
-  void MoveDown(Boolean on)
-  {
-    is_move_down = on;
+  void MoveDown() {
+    seteye(0,0,-10);
+    System.out.print("-Z");
+    applyCamera();
   }
-  
-  PVector GetForward()
-  {
-    PVector forward = lookAt.get();
+/*  
+  PVector GetForward()  {
+    PVector forward = lookAt;
     forward.sub(eye);
     forward.normalize();
     return forward;
   }
   
-  PVector GetLeft()
-  {
+  PVector GetLeft() {
     PVector forward = GetForward();
     PVector left = up.cross(forward);
     left.normalize();
     return left;
   }
-    
-  void update()
-  {    
+*/  
+  void resetCamera() {
+    fov = PI/3.0;
+    lookAt = new PVector(0,0,0);
+    eye = new PVector(100,100,100);
+    up = new PVector(0,-1,0);
+    applyCamera();
+  }
+  
+ 
+   void seteye(int x,int y,int z){
+    PVector oldeye = eye;
+    eye = new PVector(oldeye.x+x,oldeye.y+y,oldeye.z+z);
+    lookAt = new PVector(0,0,0);
+    up = new PVector(0,-1,0);
+    fov = PI/3.0;
+  }
+/*  
+  void Update()  {
       float delta_time = (millis() - last_time) / 1000.0;
       last_time = millis();
     
-      if (is_move_forward)
-      {
-        PVector f = GetForward();
-        f.mult(delta_time * speed);
-        eye.add(f);
-        lookAt.add(f);
-        
-        applyCamera();
+      if (is_move_forward)      {
+       System.out.print("AA");
+       setlookat(10,0,0);
+       //seteye(10,0,0);
+       up = new PVector(0,-1,0);
+       applyCamera();
       }
       
-      if (is_move_backward)
-      {
+      if (is_move_backward)      {
         PVector b = GetForward();
         b.mult(-delta_time * speed);
         eye.add(b);
         lookAt.add(b);
-        
         applyCamera();
       }
       
@@ -130,13 +145,13 @@ class Camera
           
           PVector l = GetLeft();
           PVector f1 = GetForward();
-          PVector f2 = f1.get();
+          PVector f2 = f1;
           PVector u = l.cross(f1);
           
           PVector r1 = rotateAround(f1, u, dx);
           PVector r2 = rotateAround(f2, l, dy);
         
-          PVector new_look_at = r1.get();
+          PVector new_look_at = r1;
           new_look_at.add(r2);
           new_look_at.mult(0.5);
           new_look_at.add(eye);
@@ -150,9 +165,9 @@ class Camera
       } else
         last_mouse_position = null;
   }
-  
-  void applyCamera()
-  {
+ */
+ 
+  void applyCamera() {
     // Normalize look at
     lookAt.sub(eye);
     lookAt.normalize();
@@ -172,17 +187,17 @@ class Camera
   {
    //use normalised values
     PVector axis = new PVector(_axis.x, _axis.y, _axis.z);
-    PVector vnorm = new PVector(v.x, v.y, v.z);
+   // PVector vnorm = new PVector(v.x, v.y, v.z);
     float _parallel = axis.dot(v); // mDot(axis,v); //dot product
-    PVector parallel = axis.get(); //multiply all elements by a value
+    PVector parallel = axis; //multiply all elements by a value
     parallel.mult(_parallel);
-    PVector perp = parallel.get(); //subtract one vector from another
+    PVector perp = parallel; //subtract one vector from another
     perp.sub(v);
-    PVector Cross = v.get().cross(axis); //cross product
+    PVector Cross = v.cross(axis); //cross product
     //PVector result = add(parallel,add(mul(Cross,sin(-ang)),mul(perp,cos(-ang))));
     Cross.mult(sin(-ang));
     perp.mult(cos(-ang));
-    PVector result = parallel.get();
+    PVector result = parallel;
     result.add(Cross);
     result.add(perp);
     result.mult(-1);
